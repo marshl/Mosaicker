@@ -1,2 +1,5 @@
 *.opensdf
 *.sdf
+Mosaicker/Images/
+Mosaicker/Debug/
+Mosaicker/Tiles/
