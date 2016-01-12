@@ -5,10 +5,10 @@
 
 #include "colour.h"
 
-ImageField::ImageField( LONG _width, LONG _height )
+ImageField::ImageField( LONG width, LONG height )
 {
-    this->width = _width;
-    this->height = _height;
+    this->width = width;
+    this->height = height;
 
     this->image = new Colour*[this->height];
     
@@ -29,48 +29,25 @@ ImageField::~ImageField()
     
 }
 
-Colour* ImageField::GetPixel( LONG _x, LONG _y )
+Colour* ImageField::GetPixel( LONG x, LONG y )
 {
-    assert(_x >= 0 );
-    assert( _x < this->width );
-    assert( _y >= 0 );
-    assert( _y < this->height );
-    return &this->image[_y][_x];
+    assert(x >= 0 );
+    assert(x < this->width );
+    assert(y >= 0 );
+    assert(y < this->height );
+    return &this->image[y][x];
 }
 
-/*
-Colour ImageField::GetAverage( LONG _x, LONG _y, LONG _xOffset, LONG _yOffset )
+Colour ImageField::GetAverage( LONG startX, LONG startY, LONG tilesWide, LONG tilesHigh )
 {
     Colour total;
     int count = 0;
-    for ( LONG y = _y; y < _y + _yOffset; ++y )
+    float cellWidth = (float)this->width / (float)tilesWide;
+    float cellHeight = (float)this->height / (float)tilesHigh;
+
+    for ( LONG y = (int)(float(startY) * cellHeight); y < int(float(startY+1)*cellHeight) && y < this->height; ++y )
     {
-        for ( LONG x = _x; x < _x + _xOffset; ++x )
-        {
-            Colour* c = this->GetPixel( x, y );
-
-            if ( c->r != 1.0f || c->b != 0.0f || c->g != 1.0f )
-            {
-                total += *c;
-                ++count;
-            }
-            
-        }
-    }
-
-    return count == 0 ? Colour(-1, -1, -1) : total / (float)count;
-}*/
-
-Colour ImageField::GetAverage( LONG _x, LONG _y, LONG _tilesWide, LONG _tilesHigh )
-{
-    Colour total;
-    int count = 0;
-    float cellWidth = (float)this->width /(float) _tilesWide;
-    float cellHeight = (float)this->height / (float)_tilesHigh;
-
-    for ( LONG y = (int)(float(_y) * cellHeight); y < int(float(_y+1)*cellHeight) && y < this->height; ++y )
-    {
-        for ( LONG x = (int)(float(_x) * cellWidth); x < int(float(_x+1)*cellWidth) && x < this->width; ++x )
+        for ( LONG x = (int)(float(startX) * cellWidth); x < int(float(startX+1)*cellWidth) && x < this->width; ++x )
         {
             Colour* c = this->GetPixel( x, y );
             // Ignore cells coloured magenta (transparent colour)
@@ -86,33 +63,18 @@ Colour ImageField::GetAverage( LONG _x, LONG _y, LONG _tilesWide, LONG _tilesHig
     return count == 0 ? Colour(-1, -1, -1) : total / (float)count;
 }
 
-void ImageField::LoadData( unsigned char* _data )
+void ImageField::LoadData( unsigned char* data )
 {
-    this->data = _data;
+    this->data = data;
     const size_t pixelSize = sizeof(char) * 3;
-    /*for ( LONG y = 0; y < this->height; ++y )
-    {
-        for ( LONG x = 0; x < this->width; ++x )
-        {
-            unsigned char* p = _data + ( (y * this->height) + x ) * 3;
-            unsigned char r = *p;
-            unsigned char g = *(p+1);
-            unsigned char b = *(p+2);
-            
-            this->image[y][x].r = float(r) / 255.0f;
-            this->image[y][x].g = float(g) / 255.0f;
-            this->image[y][x].b = float(b) / 255.0f;
-        }
-    }*/
 
     int x = 0, y = 0;
 
-    //for ( int i = 0; i < this->bitmapInfo.biSize; )
     for ( int i = 0; ; )
     {
-        unsigned char r = *(_data+i);
-        unsigned char g = *(_data+i+1);
-        unsigned char b = *(_data+i+2);
+        unsigned char r = *(data+i);
+        unsigned char g = *(data+i+1);
+        unsigned char b = *(data+i+2);
 
         this->image[y][x].r = float(r) / 255.0f;
         this->image[y][x].g = float(g) / 255.0f;

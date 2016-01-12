@@ -278,8 +278,6 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam 
     return ( DefWindowProc( hwnd, message, wParam, lParam ) );
 }
 
-
-
 // the main windows entry point
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nShowCmd )
 {
@@ -392,29 +390,6 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     
     LoadTiles();
 
-    /*
-    int cmdArgLength;
-    LPWSTR* cmdArgs = CommandLineToArgvW( GetCommandLineW(), &cmdArgLength );
-
-    if ( cmdArgLength < 2 )
-    {
-        std::cout << "Not enough arguments";
-        exit( 1 );
-    }
-
-    for ( int i = 0; i < cmdArgLength; ++i )
-    {
-        std::wcout << cmdArgs[i] << "\n";
-    }
-
-    wstring wFilename = cmdArgs[1];
-
-    std::wcout << "Filename " << wFilename << "\n";
-    wFilename = L"images/" + wFilename;
-    std::string filename( wFilename.begin(), wFilename.end() );
-    filename.assign( wFilename.begin(), wFilename.end() );
-*/
-    
     BITMAPINFOHEADER header;
     unsigned char* data = Common::LoadBitmapFile( filename.c_str(), &header );
     mainImageField = new ImageField( header.biWidth, header.biHeight );
@@ -464,12 +439,14 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLin
     {
         delete textureField[i];
     }
+
     delete textureField;
 
     for ( unsigned int i = 0; i < tileData.size(); ++i )
     {
         delete tileData[i];
     }
+
     delete mainImageField;
     FreeConsole();
     return msg.wParam;
@@ -488,107 +465,107 @@ void Render()
 
     switch ( renderMode )
     {
-    case RENDERMODE_IMAGE:
-    {
-        glColor3f( 1.0f, 1.0f, 1.0f );
-                
-        glBindTexture( GL_TEXTURE_2D, mainImageField->texture );
-        glPushMatrix();
-    
-        glTranslatef( -1.0f, -1.0f, 0.0f );
-        glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y+currentOffset.y) / windowHeight, 0.0f );
-    
-        glTranslatef((totalOffset.x+currentOffset.x) / windowWidth, -(totalOffset.y+currentOffset.y) / windowHeight, 0.0f );
-        glScalef( zoom, zoom, 1 );
-        glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y+currentOffset.y) / windowHeight, 0.0f );
-
-        glBegin( GL_QUADS );
-            glTexCoord2f( 0.0f, 0.0f ); glVertex2f( 0.0f, 0.0f );
-            glTexCoord2f( 1.0f, 0.0f );    glVertex2f( 1.0f * imageAspect, 0.0f );
-            glTexCoord2f( 1.0f, 1.0f );    glVertex2f( 1.0f * imageAspect, 1.0f );
-            glTexCoord2f( 0.0f, 1.0f );    glVertex2f( 0.0f, 1.0f );
-        glEnd();
-        break;
-    }
-    case RENDERMODE_TILES:
-    {
-        glBindTexture( GL_TEXTURE_2D, NULL );
-        glTranslatef( -1.0f, -1.0f, 0.0f );
-        glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
-    
-        glTranslatef((totalOffset.x+currentOffset.x) / windowWidth, -(totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
-        glScalef( zoom, zoom, 1 );
-        glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
-
-        glBegin( GL_QUADS );
-        for ( int y = 0; y < tesellationTilesHigh; ++y )
+        case RENDERMODE_IMAGE:
         {
-            for ( int x = 0; x < tesellationTilesWide; ++x )
-            {
-                Colour c = mainImageField->GetAverage( x, y, tesellationTilesWide, tesellationTilesHigh );
-                //c = *mainImageField->GetPixel(x,y);
-                if ( c.r >= 0 )
-                {
-                    glColor3f( c.r, c.g, c.b );
-                    //glColor3f( float(x)/(float)tesellation, float(y)/float(tesellation), 1.0f );
+            glColor3f( 1.0f, 1.0f, 1.0f );
                 
-                    glVertex2f( (float(x) / (float)tesellationTilesWide) * tileAspect, float(y) / tesellationTilesHigh );
-                    glVertex2f( (float(x+1) / (float)tesellationTilesWide) * tileAspect, float(y) / tesellationTilesHigh );
-                    glVertex2f( (float(x+1) / (float)tesellationTilesWide) * tileAspect, float(y+1) / tesellationTilesHigh );
-                    glVertex2f( (float(x) / (float)tesellationTilesWide) * tileAspect, float(y+1) / tesellationTilesHigh );
-                }
-            }
+            glBindTexture( GL_TEXTURE_2D, mainImageField->texture );
+            glPushMatrix();
+    
+            glTranslatef( -1.0f, -1.0f, 0.0f );
+            glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y+currentOffset.y) / windowHeight, 0.0f );
+    
+            glTranslatef((totalOffset.x+currentOffset.x) / windowWidth, -(totalOffset.y+currentOffset.y) / windowHeight, 0.0f );
+            glScalef( zoom, zoom, 1 );
+            glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y+currentOffset.y) / windowHeight, 0.0f );
+
+            glBegin( GL_QUADS );
+                glTexCoord2f( 0.0f, 0.0f ); glVertex2f( 0.0f, 0.0f );
+                glTexCoord2f( 1.0f, 0.0f );    glVertex2f( 1.0f * imageAspect, 0.0f );
+                glTexCoord2f( 1.0f, 1.0f );    glVertex2f( 1.0f * imageAspect, 1.0f );
+                glTexCoord2f( 0.0f, 1.0f );    glVertex2f( 0.0f, 1.0f );
+            glEnd();
+            break;
         }
-        glEnd();
-        break;
-    }
-    case RENDERMODE_REPLACE:
-    {
-        glColor3f( 1.0f, 1.0f, 1.0f );
-        glTranslatef( -1.0f, -1.0f, 0.0f );
-        glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
-    
-        glTranslatef((totalOffset.x+currentOffset.x) / windowWidth, -(totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
-        glScalef( zoom, zoom, 1 );
-        glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
-
-        if ( textureMap.size() > 0 )
+        case RENDERMODE_TILES:
         {
-            int texture = -1;
-            for ( std::multimap<ImageField*, Vector2>::iterator iter = textureMap.begin(); iter != textureMap.end(); ++iter )
-            {
-                if ( iter->first == nullptr )
-                {
-                    continue;
-                }
+            glBindTexture( GL_TEXTURE_2D, NULL );
+            glTranslatef( -1.0f, -1.0f, 0.0f );
+            glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
+    
+            glTranslatef((totalOffset.x+currentOffset.x) / windowWidth, -(totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
+            glScalef( zoom, zoom, 1 );
+            glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
 
-                if ( texture != iter->first->texture )
+            glBegin( GL_QUADS );
+            for ( int y = 0; y < tesellationTilesHigh; ++y )
+            {
+                for ( int x = 0; x < tesellationTilesWide; ++x )
                 {
-                    if ( texture != -1 )
+                    Colour c = mainImageField->GetAverage( x, y, tesellationTilesWide, tesellationTilesHigh );
+                    //c = *mainImageField->GetPixel(x,y);
+                    if ( c.r >= 0 )
                     {
-                        glEnd();
+                        glColor3f( c.r, c.g, c.b );
+                        //glColor3f( float(x)/(float)tesellation, float(y)/float(tesellation), 1.0f );
+                
+                        glVertex2f( (float(x) / (float)tesellationTilesWide) * tileAspect, float(y) / tesellationTilesHigh );
+                        glVertex2f( (float(x+1) / (float)tesellationTilesWide) * tileAspect, float(y) / tesellationTilesHigh );
+                        glVertex2f( (float(x+1) / (float)tesellationTilesWide) * tileAspect, float(y+1) / tesellationTilesHigh );
+                        glVertex2f( (float(x) / (float)tesellationTilesWide) * tileAspect, float(y+1) / tesellationTilesHigh );
                     }
-                    texture = iter->first->texture;
-
-                    glBindTexture( GL_TEXTURE_2D, texture );
-                    glBegin( GL_QUADS );
                 }
-
-                Vector2 pos = iter->second;
-
-                glTexCoord2f( 0.0f, 0.0f );    glVertex2f( pos.x / tesellationTilesWide * tileAspect, pos.y / tesellationTilesHigh );
-                glTexCoord2f( 1.0f, 0.0f );    glVertex2f( (pos.x + 1) / tesellationTilesWide * tileAspect, pos.y / tesellationTilesHigh );
-                glTexCoord2f( 1.0f, 1.0f );    glVertex2f( (pos.x + 1) / tesellationTilesWide * tileAspect, (pos.y + 1) / tesellationTilesHigh );
-                glTexCoord2f( 0.0f, 1.0f );    glVertex2f( pos.x / tesellationTilesWide * tileAspect, (pos.y + 1) / tesellationTilesHigh );
             }
+            glEnd();
+            break;
         }
-        glEnd();
-        break;
-    }
-    default:
-    {
-        break;
-    }
+        case RENDERMODE_REPLACE:
+        {
+            glColor3f( 1.0f, 1.0f, 1.0f );
+            glTranslatef( -1.0f, -1.0f, 0.0f );
+            glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
+    
+            glTranslatef((totalOffset.x+currentOffset.x) / windowWidth, -(totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
+            glScalef( zoom, zoom, 1 );
+            glTranslatef( -(totalOffset.x+currentOffset.x) / windowWidth, (totalOffset.y + currentOffset.y) / windowHeight, 0.0f );
+
+            if ( textureMap.size() > 0 )
+            {
+                int texture = -1;
+                for ( std::multimap<ImageField*, Vector2>::iterator iter = textureMap.begin(); iter != textureMap.end(); ++iter )
+                {
+                    if ( iter->first == nullptr )
+                    {
+                        continue;
+                    }
+
+                    if ( texture != iter->first->texture )
+                    {
+                        if ( texture != -1 )
+                        {
+                            glEnd();
+                        }
+                        texture = iter->first->texture;
+
+                        glBindTexture( GL_TEXTURE_2D, texture );
+                        glBegin( GL_QUADS );
+                    }
+
+                    Vector2 pos = iter->second;
+
+                    glTexCoord2f( 0.0f, 0.0f );    glVertex2f( pos.x / tesellationTilesWide * tileAspect, pos.y / tesellationTilesHigh );
+                    glTexCoord2f( 1.0f, 0.0f );    glVertex2f( (pos.x + 1) / tesellationTilesWide * tileAspect, pos.y / tesellationTilesHigh );
+                    glTexCoord2f( 1.0f, 1.0f );    glVertex2f( (pos.x + 1) / tesellationTilesWide * tileAspect, (pos.y + 1) / tesellationTilesHigh );
+                    glTexCoord2f( 0.0f, 1.0f );    glVertex2f( pos.x / tesellationTilesWide * tileAspect, (pos.y + 1) / tesellationTilesHigh );
+                }
+            }
+            glEnd();
+            break;
+        }
+        default:
+        {
+            break;
+        }
     }
 
     if ( showingLines )
@@ -619,7 +596,7 @@ void InitialiseOpenGL()
 }
 
 
-bool FindImageToLoad( std::string& _filename )
+bool FindImageToLoad( std::string& filename )
 {
     unsigned int fileCount = 0;
     WIN32_FIND_DATA findData;
@@ -655,34 +632,30 @@ bool FindImageToLoad( std::string& _filename )
     }
 
     int fileIndex = GetUserIndex( filenames.size() );
-    _filename = filenames[fileIndex];
+    filename = filenames[fileIndex];
     return true;
 }
 
 
-int GetUserIndex( int _length )
+int GetUserIndex( int length )
 {
     while ( true )
     {
         std::cout << "Enter file index: ";
-        //std::string str = "";
-        //std::getline( std::cin, str );
         int index = -1;
         std::cin >> index;
 
-        //std::istringstream istream( str );
-        //int index;
-        //istream >> index;
         std::cout << "I:"<< index <<"\n";
-        if ( index < 0 || index >= _length )
+        if ( index < 0 || index >= length )
         {
-            std::cout << "Enter a number between 0 and " << _length << "\n";
+            std::cout << "Enter a number between 0 and " << length << "\n";
         }
         else
         {
             return index;
         }
     }
+
     return 0;
 }
 
@@ -765,10 +738,10 @@ void RecalculateTextureField()
     }
 }
 
-void RecalculateTextureRow( int _rowIndex )
+void RecalculateTextureRow( int rowIndex )
 {
-    for ( int y = tesellationTilesHigh / THREAD_COUNT * _rowIndex;
-        y < (int)((float)tesellationTilesHigh / (float)THREAD_COUNT * float(_rowIndex + 1)); ++y )
+    for ( int y = tesellationTilesHigh / THREAD_COUNT * rowIndex;
+        y < (int)((float)tesellationTilesHigh / (float)THREAD_COUNT * float( rowIndex + 1)); ++y )
     {
         for ( int x = 0; x < tesellationTilesWide; ++x )
         {
@@ -790,18 +763,11 @@ void RecalculateTextureRow( int _rowIndex )
                         closestField = tileData[i];
                     }
                 }
-
             }
 
             textureField[y][x] = closestField;
-            /*if ( closestField != nullptr )
-            {
-                textureMap.insert( std::pair<ImageField*, Vector2>( closestField, Vector2( (float)x, (float)y ) ) );
-            }*/
         }
     }
-
-    
 }
 
 void PrintInstructions()

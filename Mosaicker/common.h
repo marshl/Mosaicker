@@ -10,8 +10,6 @@
 
 namespace Common
 {
-    int GetFrameCount( bool _increment = false );
-
     unsigned char* LoadBitmapFile( const char* _filename, BITMAPINFOHEADER* _bitmapInfoHeader );
 
     unsigned int LoadBitmapAsTexture( unsigned char* _bitmapData, BITMAPINFOHEADER* _bitmapInfoHeader );

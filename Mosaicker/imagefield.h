@@ -24,17 +24,15 @@ public:
 
     int count;
 
-    ImageField( LONG _width, LONG _height );
-    ImageField();
+    ImageField( LONG width, LONG height );
+
     ~ImageField();
 
-    Colour* GetPixel( LONG _x, LONG _y );
+    Colour* GetPixel( LONG x, LONG y );
 
-    //Colour GetAverage( LONG _x, LONG _y, LONG _xOffset, LONG _yOffset );
+    Colour GetAverage( LONG x, LONG y, LONG tilesWide, LONG tilesHigh );
 
-    Colour GetAverage( LONG _x, LONG _y, LONG _tilesWide, LONG _tilesHigh );
-
-    void LoadData( unsigned char* _data );
+    void LoadData( unsigned char* data );
 };
 
 #endif

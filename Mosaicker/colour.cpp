@@ -2,11 +2,11 @@
 
 #include <cmath>
 
-Colour& Colour::operator += ( const Colour& _other )
+Colour& Colour::operator += ( const Colour& other )
 {
-    this->r += _other.r;
-    this->g += _other.g;
-    this->b += _other.b;
+    this->r += other.r;
+    this->g += other.g;
+    this->b += other.b;
     return *this;
 }
 

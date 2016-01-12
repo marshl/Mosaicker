@@ -2,9 +2,7 @@
 
 #include <Windows.h>
 
-Mouse::Mouse()
-:    m_iPrevPosX(0)
-,    m_iPrevPosY(0)
+Mouse::Mouse() : m_iPrevPosX(0), m_iPrevPosY(0)
 {
     m_iWheel = 0;
 
@@ -14,6 +12,7 @@ Mouse::Mouse()
 
 Mouse::~Mouse()
 {
+
 }
 
 

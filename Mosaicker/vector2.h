@@ -1,5 +1,5 @@
-#ifndef VECTOR2_H
-#define VECTOR2_H
+#ifndef VECTOR2_H_
+#define VECTOR2_H_
 
 #include <cmath>
 #include <ostream>
@@ -26,7 +26,6 @@ public:
 
     Vector2& operator = (const Vector2& v);
     bool operator == (const Vector2& v) const;
-    bool IsCloseTo(const Vector2& v, float tolerance) const;
 
     bool operator >> (const Vector2& v) const;
     bool operator << (const Vector2& v) const;

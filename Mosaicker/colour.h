@@ -9,7 +9,7 @@ public:
     Colour() : r( 0.0f ), g( 0.0f ), b( 0.0f ) { }
     Colour( float _r, float _g, float _b ) : r(_r), g(_g), b(_b) { }
 
-    Colour& operator += ( const Colour& _other );
+    Colour& operator += ( const Colour& other );
 
     Colour operator / ( float _f );
 };
